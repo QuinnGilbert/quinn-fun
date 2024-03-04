@@ -14,6 +14,7 @@ export default function Home(): JSX.Element {
       <button onClick={() => navigate("/game")}>2048</button>
       <button onClick={() => navigate("/ranges")}>Poker Ranges</button>
       <button onClick={() => navigate("/example")}>Example</button>
+      <button onClick={() => navigate("/tetris")}>Tetris</button>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Example from "./pages/Example";
 import Game from "./pages/Game";
 import Ranges from "./pages/Ranges";
+import Tetris from "./pages/Tetris";
 
 export default function App(): JSX.Element {
   return (
@@ -18,6 +19,7 @@ export default function App(): JSX.Element {
         <Route path="/home" element={<Home />} />
         <Route path="/game" element={<Game />} />
         <Route path="/ranges" element={<Ranges />} />
+        <Route path="/tetris" element={<Tetris />} />
       </Routes>
     </Router>
   );
