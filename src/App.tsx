@@ -9,6 +9,7 @@ import Example from "./pages/Example";
 import Game from "./pages/Game";
 import Ranges from "./pages/Ranges";
 import Tetris from "./pages/Tetris";
+import Minesweeper from "./pages/Minesweeper";
 
 export default function App(): JSX.Element {
   return (
@@ -20,6 +21,7 @@ export default function App(): JSX.Element {
         <Route path="/game" element={<Game />} />
         <Route path="/ranges" element={<Ranges />} />
         <Route path="/tetris" element={<Tetris />} />
+        <Route path="/minesweeper" element={<Minesweeper />} />
       </Routes>
     </Router>
   );

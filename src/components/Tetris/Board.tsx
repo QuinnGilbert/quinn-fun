@@ -30,8 +30,10 @@ export default function Board(): JSX.Element {
       if (event.key === "ArrowRight") moveRight(loc, setLoc, curBlock, placed);
       if (event.key === "ArrowDown")
         moveDown(loc, setLoc, grid, setPlaced, curBlock, setCurBlock, placed);
-      if (event.key === "ArrowUp") rotateClockWise(curBlock, setCurBlock);
-      if (event.key === "z") rotateCounterClockWise(curBlock, setCurBlock);
+      if (event.key === "ArrowUp")
+        rotateClockWise(curBlock, setCurBlock, loc, placed);
+      if (event.key === "z")
+        rotateCounterClockWise(curBlock, setCurBlock, loc, placed);
       if (event.key === " ")
         hardDrop(loc, setLoc, setPlaced, curBlock, setCurBlock, placed);
     };
@@ -47,6 +49,19 @@ export default function Board(): JSX.Element {
 
   // TODO: add ghost pieces
   const grid: number[][] = JSON.parse(JSON.stringify(placed));
+
+  let ghostLoc = [loc[0] + 1, loc[1]];
+  while (inBounds(ghostLoc, curBlock, placed)) {
+    ghostLoc = [ghostLoc[0] + 1, ghostLoc[1]];
+  }
+  ghostLoc = [ghostLoc[0] - 1, ghostLoc[1]];
+  for (let i = 0; i < curBlock.length; i++) {
+    for (let j = 0; j < curBlock[i].length; j++) {
+      if (curBlock[i][j] !== 0)
+        grid[i + ghostLoc[0]][j + ghostLoc[1]] = -curBlock[i][j];
+    }
+  }
+
   for (let i = 0; i < curBlock.length; i++) {
     for (let j = 0; j < curBlock[i].length; j++) {
       if (i + loc[0] < 20 && j + loc[1] < 10 && j + loc[1] >= 0)
@@ -104,7 +119,13 @@ function moveDown(
   const newLoc = [loc[0] + 1, loc[1]];
   if (!inBounds(newLoc, curBlock, placed)) {
     // TODO: change to copy placed instead of grid, since grid will have ghost pieces
-    setPlaced(grid);
+    for (let i = 0; i < curBlock.length; i++) {
+      for (let j = 0; j < curBlock[i].length; j++) {
+        if (curBlock[i][j] !== 0)
+          placed[i + loc[0]][j + loc[1]] = curBlock[i][j];
+      }
+    }
+    setPlaced(placed);
     clearLines(grid, setPlaced);
     newPiece(setLoc, setCurBlock);
     return;
@@ -156,25 +177,34 @@ function inBounds(
   }
   return true;
 }
-// TODO: Add check to not rotate into other pieces
 // TODO (nit): Add jumping mechanic for turning
-function rotateClockWise(curBlock: number[][], setCurBlock: Function) {
+function rotateClockWise(
+  curBlock: number[][],
+  setCurBlock: Function,
+  loc: number[],
+  placed: number[][]
+) {
   const res = JSON.parse(JSON.stringify(curBlock));
   for (let i = 0; i < curBlock.length; i++) {
     for (let j = 0; j < curBlock[i].length; j++) {
       res[i][j] = curBlock[curBlock[i].length - 1 - j][i];
     }
   }
-  setCurBlock(res);
+  if (inBounds(loc, res, placed)) setCurBlock(res);
 }
-function rotateCounterClockWise(curBlock: number[][], setCurBlock: Function) {
+function rotateCounterClockWise(
+  curBlock: number[][],
+  setCurBlock: Function,
+  loc: number[],
+  placed: number[][]
+) {
   const res = JSON.parse(JSON.stringify(curBlock));
   for (let i = 0; i < curBlock.length; i++) {
     for (let j = 0; j < curBlock[i].length; j++) {
       res[i][j] = curBlock[j][curBlock[i].length - 1 - i];
     }
   }
-  setCurBlock(res);
+  if (inBounds(loc, res, placed)) setCurBlock(res);
 }
 function newPiece(setLoc: Function, setCurBlock: Function) {
   setLoc([0, 4]);

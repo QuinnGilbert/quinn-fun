@@ -14,14 +14,17 @@ export default function Cell({ value }: Props): JSX.Element {
     "red",
   ];
 
+  const opacity = value < 0 ? 0.5 : 1;
+
   return (
     <div
       style={{
         width: "10px",
         height: "10px",
-        backgroundColor: colors[value],
+        backgroundColor: colors[Math.abs(value)],
         boxSizing: "border-box",
         border: "dotted 1px",
+        opacity: opacity,
       }}
     ></div>
   );
